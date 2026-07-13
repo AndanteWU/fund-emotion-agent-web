@@ -1,4 +1,5 @@
 import EmotionSelector from "@/components/emotion/EmotionSelector";
+import EmotionScore from "@/components/emotion/EmotionScore";
 
 export default function RecordPage() {
   return (
@@ -19,6 +20,8 @@ export default function RecordPage() {
         </h2>
 
         <EmotionSelector />
+
+        <EmotionScore />
       </section>
 
     </main>
