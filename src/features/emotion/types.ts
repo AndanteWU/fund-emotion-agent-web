@@ -49,6 +49,41 @@ export interface EmotionRecordPayload {
   note: string;
 }
 
+export interface EmotionRecordRow {
+  id: string;
+  user_id: string;
+  record_date: string;
+  account_check_frequency: string | null;
+  strongest_emotion: string | null;
+  operation_impulse: string | null;
+  impulse_source: string | null;
+  actual_action: string | null;
+  anxiety_level: number | null;
+  fomo_level: number | null;
+  impulse_level: number | null;
+  note: string | null;
+}
+
+export interface EmotionHistoryFilters {
+  emotion?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface EmotionHistoryDateRange {
+  startDate: string;
+  endDate: string;
+}
+
+export type EmotionHistoryQueryResult =
+  | {
+      status: "success";
+      records: EmotionRecordRow[];
+      range: EmotionHistoryDateRange;
+    }
+  | { status: "unauthenticated" }
+  | { status: "error" };
+
 export type EmotionRecordServiceErrorCode =
   | "unauthenticated"
   | "save_failed";
