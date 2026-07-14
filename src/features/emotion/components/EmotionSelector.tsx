@@ -1,24 +1,14 @@
 "use client";
 
+import { EMOTIONS } from "@/features/emotion/constants";
 import { useState } from "react";
-
-const emotions = [
-  "平静",
-  "焦虑",
-  "兴奋",
-  "后悔",
-  "恐惧",
-  "贪婪",
-  "烦躁",
-  "麻木",
-];
 
 export default function EmotionSelector() {
   const [selectedEmotion, setSelectedEmotion] = useState("");
 
   return (
     <div className="grid grid-cols-4 gap-3">
-      {emotions.map((emotion) => (
+      {EMOTIONS.map((emotion) => (
         <button
           key={emotion}
           onClick={() => setSelectedEmotion(emotion)}
