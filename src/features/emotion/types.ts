@@ -8,19 +8,6 @@ export type Emotion =
   | "烦躁"
   | "麻木";
 
-export interface EmotionRecord {
-  id?: string;
-  user_id: string;
-  emotion: Emotion;
-  emotion_score: number;
-  anxiety_score: number;
-  fomo_score: number;
-  impulse_score: number;
-  watch_frequency: number;
-  operation_impulse: boolean;
-  note?: string;
-  created_at?: string;
-}
 export interface EmotionRecordFormValues {
   emotion: Emotion | "";
   emotionScore: number;
@@ -47,8 +34,20 @@ export interface EmotionRecordSubmission {
   note: string;
 }
 
-/** 仅包含项目现有类型已确认存在于 emotion_records 的数据库字段。 */
-export type EmotionRecordPayload = Omit<EmotionRecord, "id" | "created_at">;
+export interface EmotionRecordPayload {
+  id: string;
+  user_id: string;
+  record_date: string;
+  account_check_frequency: string;
+  strongest_emotion: Emotion;
+  operation_impulse: "是" | "否";
+  impulse_source: string;
+  actual_action: "是" | "否";
+  anxiety_level: number;
+  fomo_level: number;
+  impulse_level: number;
+  note: string;
+}
 
 export type EmotionRecordServiceErrorCode =
   | "unauthenticated"
