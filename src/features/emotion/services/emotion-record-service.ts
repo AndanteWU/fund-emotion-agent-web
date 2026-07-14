@@ -1,18 +1,9 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import {
   EmotionRecordServiceError,
   type EmotionRecordPayload,
   type EmotionRecordSubmission,
 } from "../types";
-
-export async function hasAuthenticatedEmotionUser(): Promise<boolean> {
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  return !error && Boolean(user);
-}
 
 export function mapEmotionRecordPayload(
   submission: EmotionRecordSubmission,
@@ -34,6 +25,7 @@ export function mapEmotionRecordPayload(
 export async function saveEmotionRecord(
   submission: EmotionRecordSubmission,
 ): Promise<void> {
+  const supabase = createClient();
   const {
     data: { user },
     error: authError,

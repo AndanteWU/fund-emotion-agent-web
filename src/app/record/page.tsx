@@ -1,6 +1,13 @@
+import AuthUserBar from "@/features/auth/components/AuthUserBar";
+import LoginPrompt from "@/features/auth/components/LoginPrompt";
+import { getCurrentUser } from "@/features/auth/services/server-auth-service";
 import EmotionRecordForm from "@/features/emotion/components/EmotionRecordForm";
 
-export default function RecordPage() {
+export const dynamic = "force-dynamic";
+
+export default async function RecordPage() {
+  const user = await getCurrentUser();
+
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
       <header className="mb-8 space-y-3">
@@ -13,7 +20,14 @@ export default function RecordPage() {
         </p>
       </header>
 
-      <EmotionRecordForm />
+      {user ? (
+        <>
+          <AuthUserBar email={user.email ?? "邮箱信息不可用"} />
+          <EmotionRecordForm />
+        </>
+      ) : (
+        <LoginPrompt />
+      )}
     </main>
   );
 }
