@@ -1,29 +1,54 @@
 "use client";
 
-import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 
-export default function EmotionScore() {
-  const [score, setScore] = useState(5);
+interface EmotionScoreProps {
+  id: string;
+  label: string;
+  description: string;
+  value: number;
+  onChange: (value: number) => void;
+  disabled?: boolean;
+}
 
+export default function EmotionScore({
+  id,
+  label,
+  description,
+  value,
+  onChange,
+  disabled = false,
+}: EmotionScoreProps) {
   return (
-    <div className="mt-6">
-      <h3 className="text-lg font-semibold">
-        情绪强度
-      </h3>
-
-      <p className="text-sm text-muted-foreground mt-1">
-        当前评分：{score}/10
-      </p>
+    <div className="space-y-4">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <label htmlFor={id} className="font-medium">
+            {label}
+          </label>
+          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+        </div>
+        <output
+          htmlFor={id}
+          className="min-w-12 rounded-full bg-muted px-3 py-1 text-center text-sm font-semibold tabular-nums"
+        >
+          {value}/10
+        </output>
+      </div>
 
       <Slider
-        className="mt-4"
-        defaultValue={[5]}
-        max={10}
+        id={id}
+        value={[value]}
         min={0}
+        max={10}
         step={1}
-        onValueChange={(value) => {
-          setScore(Number(value));
+        disabled={disabled}
+        aria-label={label}
+        onValueChange={(nextValue) => {
+          const score = Array.isArray(nextValue) ? nextValue[0] : nextValue;
+          if (typeof score === "number") {
+            onChange(score);
+          }
         }}
       />
     </div>
