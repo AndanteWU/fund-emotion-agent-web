@@ -1,5 +1,5 @@
-import EmotionSelector from "@/components/emotion/EmotionSelector";
-import EmotionScore from "@/components/emotion/EmotionScore";
+import EmotionSelector from "@/features/emotion/components/EmotionSelector";
+import EmotionScore from "@/features/emotion/components/EmotionScore";
 
 export default function RecordPage() {
   return (
