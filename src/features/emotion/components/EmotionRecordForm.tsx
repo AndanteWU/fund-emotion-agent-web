@@ -130,10 +130,8 @@ export default function EmotionRecordForm() {
   useEffect(() => {
     let active = true;
 
-    import("../services/emotion-record-service")
-      .then(({ hasAuthenticatedEmotionUser }) =>
-        hasAuthenticatedEmotionUser(),
-      )
+    import("@/features/auth/services/browser-auth-service")
+      .then(({ hasAuthenticatedUser }) => hasAuthenticatedUser())
       .then((isAuthenticated) => {
         if (active) {
           setAuthStatus(isAuthenticated ? "authenticated" : "unauthenticated");
