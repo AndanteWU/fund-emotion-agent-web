@@ -4,6 +4,7 @@ import LoginPrompt from "@/features/auth/components/LoginPrompt";
 import { queryEmotionHistory } from "@/features/emotion/services/emotion-history-service";
 import type { EmotionRecordRow } from "@/features/emotion/types";
 import { calculateEmotionInsights } from "../services/emotion-statistics";
+import AiEmotionReviewPanel from "./AiEmotionReviewPanel";
 import EmotionCompositionChart from "./EmotionCompositionChart";
 import EmotionTrendChart from "./EmotionTrendChart";
 import HighScoreDateList from "./HighScoreDateList";
@@ -92,6 +93,7 @@ function InsightContent({ records }: InsightContentProps) {
         </div>
       </div>
       <HighScoreDateList dates={insights.highScoreDates} />
+      <AiEmotionReviewPanel />
     </div>
   );
 }
