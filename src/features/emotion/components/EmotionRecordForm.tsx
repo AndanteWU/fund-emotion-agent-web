@@ -19,7 +19,7 @@ import {
 import EmotionSelector from "./EmotionSelector";
 import EmotionScore from "./EmotionScore";
 
-type SubmitStatus = "idle" | "submitting" | "success" | "error";
+type SubmitStatus = "idle" | "submitting" | "created" | "updated" | "error";
 type AuthStatus = "checking" | "authenticated" | "unauthenticated";
 
 interface BooleanChoiceProps {
@@ -178,9 +178,9 @@ export default function EmotionRecordForm() {
 
     try {
       const { saveEmotionRecord } = await import("../services/emotion-record-service");
-      await saveEmotionRecord(result.submission);
+      const saveResult = await saveEmotionRecord(result.submission);
       setValues({ ...INITIAL_EMOTION_RECORD });
-      setStatus("success");
+      setStatus(saveResult);
     } catch (error: unknown) {
       if (error instanceof EmotionRecordServiceError) {
         setErrors([error.message]);
@@ -381,12 +381,12 @@ export default function EmotionRecordForm() {
         </div>
       )}
 
-      {status === "success" && (
+      {(status === "created" || status === "updated") && (
         <div
           className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-950"
           role="status"
         >
-          记录已保存。表单已为下一次记录重置。
+          {status === "updated" ? "今日记录已更新" : "记录保存成功"}
         </div>
       )}
 

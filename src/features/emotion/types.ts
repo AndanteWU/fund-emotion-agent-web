@@ -49,6 +49,8 @@ export interface EmotionRecordPayload {
   note: string;
 }
 
+export type EmotionRecordSaveResult = "created" | "updated";
+
 export interface EmotionRecordRow {
   id: string;
   user_id: string;
