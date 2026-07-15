@@ -15,18 +15,28 @@ export default function Header({ userEmail }: HeaderProps) {
   if (pathname === "/login" || pathname.startsWith("/auth/")) return null;
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
-        <div className="flex h-16 items-center justify-between gap-4">
-          <Link href="/" className="shrink-0 text-sm font-semibold tracking-tight sm:text-base">
-            Fund Emotion Agent
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/82 backdrop-blur-2xl">
+      <div className="mx-auto w-full max-w-[1120px] px-4 sm:px-6">
+        <div className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+          <Link href="/" className="flex min-w-0 items-center gap-2.5">
+            <span
+              className="grid size-9 shrink-0 place-items-center rounded-[14px] bg-accent text-sm font-semibold text-accent-foreground ring-1 ring-border/70"
+              aria-hidden="true"
+            >
+              F
+            </span>
+            <span className="truncate text-sm font-semibold tracking-[-0.02em] sm:text-base">
+              Fund Emotion Agent
+            </span>
           </Link>
           <div className="hidden md:block">
             <Nav pathname={pathname} />
           </div>
-          <UserMenu email={userEmail} />
+          <div className="justify-self-end">
+            <UserMenu email={userEmail} />
+          </div>
         </div>
-        <div className="border-t py-2 md:hidden">
+        <div className="pb-3 md:hidden">
           <Nav pathname={pathname} mobile />
         </div>
       </div>

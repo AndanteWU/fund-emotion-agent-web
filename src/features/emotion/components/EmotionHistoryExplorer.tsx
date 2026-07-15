@@ -61,7 +61,9 @@ export default function EmotionHistoryExplorer({
   const selectedRecords = selectedDate
     ? records.filter((record) => record.record_date === selectedDate)
     : [];
-  const visibleRecords = selectedDate ? selectedRecords : records;
+  const visibleRecords = selectedDate
+    ? records.filter((record) => record.record_date !== selectedDate)
+    : records;
 
   function changeMonth(offset: -1 | 1) {
     const nextDate = new Date(
@@ -115,7 +117,7 @@ export default function EmotionHistoryExplorer({
       <section className="space-y-4" aria-labelledby="history-list-heading">
         <div className="flex items-center justify-between gap-4">
           <h2 id="history-list-heading" className="font-medium">
-            {selectedDate ? "当天记录" : "记录列表"}
+            {selectedDate ? "其他记录" : "记录列表"}
           </h2>
           <p className="text-sm text-muted-foreground">
             共 {visibleRecords.length} 条

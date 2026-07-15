@@ -12,19 +12,60 @@ export const EMOTIONS: Emotion[] = [
 ];
 
 export interface EmotionColorStyle {
-  day: string;
+  surface: string;
   dot: string;
+  chart: string;
 }
 
 export const EMOTION_COLOR_STYLES: Record<Emotion, EmotionColorStyle> = {
-  平静: { day: "bg-emerald-100 text-emerald-950", dot: "bg-emerald-500" },
-  焦虑: { day: "bg-amber-100 text-amber-950", dot: "bg-amber-500" },
-  兴奋: { day: "bg-sky-100 text-sky-950", dot: "bg-sky-500" },
-  后悔: { day: "bg-violet-100 text-violet-950", dot: "bg-violet-500" },
-  恐惧: { day: "bg-rose-100 text-rose-950", dot: "bg-rose-500" },
-  贪婪: { day: "bg-orange-100 text-orange-950", dot: "bg-orange-500" },
-  烦躁: { day: "bg-red-100 text-red-950", dot: "bg-red-500" },
-  麻木: { day: "bg-slate-200 text-slate-950", dot: "bg-slate-500" },
+  平静: {
+    surface:
+      "bg-[var(--emotion-calm-soft)] text-[var(--emotion-calm-foreground)]",
+    dot: "bg-[var(--emotion-calm)]",
+    chart: "var(--emotion-calm)",
+  },
+  焦虑: {
+    surface:
+      "bg-[var(--emotion-anxiety-soft)] text-[var(--emotion-anxiety-foreground)]",
+    dot: "bg-[var(--emotion-anxiety)]",
+    chart: "var(--emotion-anxiety)",
+  },
+  兴奋: {
+    surface:
+      "bg-[var(--emotion-excitement-soft)] text-[var(--emotion-excitement-foreground)]",
+    dot: "bg-[var(--emotion-excitement)]",
+    chart: "var(--emotion-excitement)",
+  },
+  后悔: {
+    surface:
+      "bg-[var(--emotion-regret-soft)] text-[var(--emotion-regret-foreground)]",
+    dot: "bg-[var(--emotion-regret)]",
+    chart: "var(--emotion-regret)",
+  },
+  恐惧: {
+    surface:
+      "bg-[var(--emotion-fear-soft)] text-[var(--emotion-fear-foreground)]",
+    dot: "bg-[var(--emotion-fear)]",
+    chart: "var(--emotion-fear)",
+  },
+  贪婪: {
+    surface:
+      "bg-[var(--emotion-greed-soft)] text-[var(--emotion-greed-foreground)]",
+    dot: "bg-[var(--emotion-greed)]",
+    chart: "var(--emotion-greed)",
+  },
+  烦躁: {
+    surface:
+      "bg-[var(--emotion-irritation-soft)] text-[var(--emotion-irritation-foreground)]",
+    dot: "bg-[var(--emotion-irritation)]",
+    chart: "var(--emotion-irritation)",
+  },
+  麻木: {
+    surface:
+      "bg-[var(--emotion-numbness-soft)] text-[var(--emotion-numbness-foreground)]",
+    dot: "bg-[var(--emotion-numbness)]",
+    chart: "var(--emotion-numbness)",
+  },
 };
 
 export function isEmotion(value: string | null): value is Emotion {
