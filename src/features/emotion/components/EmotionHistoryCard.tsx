@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { EMOTION_COLOR_STYLES, isEmotion } from "../constants";
 import type { EmotionRecordRow } from "../types";
 
 interface EmotionHistoryCardProps {
@@ -42,7 +43,13 @@ export default function EmotionHistoryCard({
             {formatRecordDate(record.record_date)}
           </CardTitle>
         </div>
-        <Badge className="text-sm">
+        <Badge
+          className={
+            isEmotion(record.strongest_emotion)
+              ? `border-transparent text-sm ${EMOTION_COLOR_STYLES[record.strongest_emotion].surface}`
+              : "text-sm"
+          }
+        >
           {displayValue(record.strongest_emotion)}
         </Badge>
       </CardHeader>

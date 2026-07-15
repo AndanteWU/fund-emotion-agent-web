@@ -14,15 +14,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  EMOTION_COLOR_STYLES,
+  isEmotion,
+} from "@/features/emotion/constants";
 import type { EmotionCompositionPoint } from "../types";
 
-const CHART_COLORS = [
+const FALLBACK_CHART_COLORS = [
   "var(--chart-1)",
   "var(--chart-2)",
   "var(--chart-3)",
   "var(--chart-4)",
   "var(--chart-5)",
 ];
+
+function getChartColor(name: string, index: number): string {
+  return isEmotion(name)
+    ? EMOTION_COLOR_STYLES[name].chart
+    : FALLBACK_CHART_COLORS[index % FALLBACK_CHART_COLORS.length];
+}
 
 interface EmotionCompositionChartProps {
   data: EmotionCompositionPoint[];
@@ -45,7 +55,7 @@ export default function EmotionCompositionChart({
             暂无可绘制的情绪组成数据
           </div>
         ) : (
-          <div className="grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_10rem]">
+          <div className="grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_13rem]">
             <div
               className="h-64 w-full"
               role="img"
@@ -65,7 +75,7 @@ export default function EmotionCompositionChart({
                     {data.map((item, index) => (
                       <Cell
                         key={item.name}
-                        fill={CHART_COLORS[index % CHART_COLORS.length]}
+                        fill={getChartColor(item.name, index)}
                       />
                     ))}
                   </Pie>
@@ -75,6 +85,7 @@ export default function EmotionCompositionChart({
                       border: "1px solid var(--border)",
                       borderRadius: "var(--radius)",
                       color: "var(--popover-foreground)",
+                      boxShadow: "var(--shadow-card)",
                     }}
                   />
                 </PieChart>
@@ -84,21 +95,18 @@ export default function EmotionCompositionChart({
               {data.map((item, index) => (
                 <li
                   key={item.name}
-                  className="flex items-center justify-between gap-3"
+                  className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <span
                       className="size-2.5 shrink-0 rounded-full"
-                      style={{
-                        background:
-                          CHART_COLORS[index % CHART_COLORS.length],
-                      }}
+                      style={{ background: getChartColor(item.name, index) }}
                       aria-hidden="true"
                     />
                     <span className="truncate">{item.name}</span>
                   </span>
-                  <span className="text-muted-foreground tabular-nums">
-                    {item.value} · {Math.round((item.value / total) * 100)}%
+                  <span className="min-w-24 whitespace-nowrap text-right text-muted-foreground tabular-nums">
+                    {item.value} 条（{Math.round((item.value / total) * 100)}%）
                   </span>
                 </li>
               ))}

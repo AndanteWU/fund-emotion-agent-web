@@ -22,8 +22,10 @@ export default function Nav({ pathname, mobile = false }: NavProps) {
     <nav
       aria-label="主导航"
       className={cn(
-        "flex items-center",
-        mobile ? "gap-1 overflow-x-auto" : "gap-1",
+        "items-center bg-card/65 p-1 ring-1 ring-border/70",
+        mobile
+          ? "grid w-full grid-cols-4 gap-1 rounded-2xl"
+          : "flex gap-1 rounded-full",
       )}
     >
       {navigationItems.map((item) => {
@@ -35,10 +37,11 @@ export default function Nav({ pathname, mobile = false }: NavProps) {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "shrink-0 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "min-w-0 rounded-full py-2 text-center text-sm font-medium transition-colors",
+              mobile ? "px-1" : "px-4",
               active
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ? "bg-secondary text-foreground shadow-[0_1px_3px_rgb(42_38_30_/_8%)]"
+                : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
             )}
           >
             {item.label}

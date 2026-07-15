@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { EMOTION_COLOR_STYLES, isEmotion } from "../constants";
 import type { EmotionRecordRow } from "../types";
-import EmotionCalendarLegend from "./EmotionCalendarLegend";
 
 const WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"] as const;
+const CALENDAR_CELL_COUNT = 42;
 
 interface CalendarMonth {
   year: number;
@@ -18,6 +18,7 @@ interface CalendarMonth {
 interface CalendarDay {
   date: string;
   day: number;
+  isCurrentMonth: boolean;
 }
 
 interface EmotionCalendarProps {
@@ -32,22 +33,25 @@ function formatDate(year: number, monthIndex: number, day: number): string {
   return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-function createCalendarDays(month: CalendarMonth): Array<CalendarDay | null> {
-  const firstWeekday = (new Date(month.year, month.monthIndex, 1).getDay() + 6) % 7;
-  const daysInMonth = new Date(month.year, month.monthIndex + 1, 0).getDate();
-  const cells: Array<CalendarDay | null> = Array.from(
-    { length: firstWeekday },
-    () => null,
-  );
+function createCalendarDays(month: CalendarMonth): CalendarDay[] {
+  const firstWeekday =
+    (new Date(month.year, month.monthIndex, 1).getDay() + 6) % 7;
 
-  for (let day = 1; day <= daysInMonth; day += 1) {
-    cells.push({
-      day,
-      date: formatDate(month.year, month.monthIndex, day),
-    });
-  }
+  return Array.from({ length: CALENDAR_CELL_COUNT }, (_, index) => {
+    const date = new Date(
+      month.year,
+      month.monthIndex,
+      index - firstWeekday + 1,
+    );
 
-  return cells;
+    return {
+      date: formatDate(date.getFullYear(), date.getMonth(), date.getDate()),
+      day: date.getDate(),
+      isCurrentMonth:
+        date.getFullYear() === month.year &&
+        date.getMonth() === month.monthIndex,
+    };
+  });
 }
 
 function getToday(): string {
@@ -71,43 +75,55 @@ export default function EmotionCalendar({
   );
 
   return (
-    <Card className="min-w-0">
-      <CardHeader className="flex-row items-center justify-between gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => onMonthChange(-1)}
-          aria-label="上一个月"
-        >
-          <ChevronLeft />
-        </Button>
-        <CardTitle className="text-center">
+    <Card className="w-full min-w-0 [--card-spacing:--spacing(4)]">
+      <CardHeader className="flex flex-row items-center justify-between gap-3 pb-1">
+        <CardTitle className="text-base">
           {month.year} 年 {month.monthIndex + 1} 月
         </CardTitle>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => onMonthChange(1)}
-          aria-label="下一个月"
-        >
-          <ChevronRight />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => onMonthChange(-1)}
+            className="rounded-full bg-muted/45 hover:bg-muted"
+            aria-label="上一个月"
+          >
+            <ChevronLeft />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => onMonthChange(1)}
+            className="rounded-full bg-muted/45 hover:bg-muted"
+            aria-label="下一个月"
+          >
+            <ChevronRight />
+          </Button>
+        </div>
       </CardHeader>
-      <CardContent className="min-w-0 space-y-5">
-        <div className="grid min-w-0 grid-cols-7 gap-1 sm:gap-2">
+      <CardContent className="min-w-0">
+        <div className="grid min-w-0 grid-cols-[repeat(7,minmax(0,1fr))] gap-x-0.5">
           {WEEKDAYS.map((weekday) => (
             <div
               key={weekday}
-              className="py-1 text-center text-xs font-medium text-muted-foreground"
+              className="flex h-7 items-center justify-center text-[10px] font-medium text-muted-foreground sm:text-[11px]"
             >
               {weekday}
             </div>
           ))}
-          {days.map((calendarDay, index) => {
-            if (!calendarDay) {
-              return <div key={`empty-${index}`} aria-hidden="true" />;
+          {days.map((calendarDay) => {
+            if (!calendarDay.isCurrentMonth) {
+              return (
+                <div
+                  key={calendarDay.date}
+                  className="flex h-11 min-w-0 items-center justify-center text-[11px] text-muted-foreground/30 sm:h-14 sm:text-xs"
+                  aria-hidden="true"
+                >
+                  {calendarDay.day}
+                </div>
+              );
             }
 
             const record = recordsByDate.get(calendarDay.date);
@@ -125,31 +141,31 @@ export default function EmotionCalendar({
                 onClick={() => onDateSelect(calendarDay.date)}
                 aria-label={`${calendarDay.date}${emotion ? `，${emotion}` : "，无记录"}`}
                 aria-pressed={isSelected}
-                className={cn(
-                  "relative aspect-square min-w-0 rounded-lg text-xs font-medium transition-colors sm:text-sm",
-                  emotionStyle
-                    ? emotionStyle.day
-                    : "bg-muted/40 text-muted-foreground hover:bg-muted",
-                  isToday && "ring-1 ring-inset ring-foreground/30",
-                  isSelected &&
-                    "z-10 ring-2 ring-foreground ring-offset-2 ring-offset-background",
-                )}
+                className="group flex h-11 min-w-0 items-center justify-center rounded-xl focus-visible:outline-none sm:h-14"
               >
-                <span>{calendarDay.day}</span>
-                {emotionStyle && (
-                  <span
-                    className={cn(
-                      "absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full sm:size-1.5",
-                      emotionStyle.dot,
-                    )}
-                    aria-hidden="true"
-                  />
-                )}
+                <span
+                  className={cn(
+                    "relative grid size-8 place-items-center rounded-full text-[11px] font-medium transition-[background-color,box-shadow] sm:size-9 sm:text-xs",
+                    emotionStyle
+                      ? emotionStyle.surface
+                      : "text-foreground group-hover:bg-muted/60",
+                    isSelected &&
+                      "ring-1 ring-foreground/45 ring-offset-2 ring-offset-card",
+                    "group-focus-visible:ring-2 group-focus-visible:ring-ring/35 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-card",
+                  )}
+                >
+                  {calendarDay.day}
+                  {isToday && (
+                    <span
+                      className="absolute -bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-foreground/45"
+                      aria-hidden="true"
+                    />
+                  )}
+                </span>
               </button>
             );
           })}
         </div>
-        <EmotionCalendarLegend />
       </CardContent>
     </Card>
   );

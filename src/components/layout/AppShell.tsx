@@ -10,7 +10,7 @@ export default async function AppShell({ children }: AppShellProps) {
   const user = await getCurrentUser();
 
   return (
-    <div className="flex min-h-screen flex-col bg-muted/20">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header userEmail={user?.email ?? null} />
       <div className="flex flex-1 flex-col">{children}</div>
     </div>

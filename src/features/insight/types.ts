@@ -19,6 +19,8 @@ export interface HighScoreDate {
   impulse: number | null;
 }
 
+export type EmotionRiskLevel = "low" | "medium" | "high";
+
 export interface EmotionInsightSummary {
   totalRecords: number;
   mostFrequentEmotion: string | null;
@@ -27,6 +29,7 @@ export interface EmotionInsightSummary {
   averageImpulse: number | null;
   highAnxietyDays: number;
   highFomoDays: number;
+  riskLevel: EmotionRiskLevel;
 }
 
 export interface EmotionInsightData {

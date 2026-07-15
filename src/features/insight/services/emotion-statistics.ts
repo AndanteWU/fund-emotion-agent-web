@@ -2,6 +2,7 @@ import type { EmotionRecordRow } from "@/features/emotion/types";
 import type {
   EmotionCompositionPoint,
   EmotionInsightData,
+  EmotionRiskLevel,
   EmotionTrendPoint,
   HighScoreDate,
 } from "../types";
@@ -12,6 +13,16 @@ interface DailyAccumulator {
   anxietyValues: number[];
   fomoValues: number[];
   impulseValues: number[];
+}
+
+interface EmotionRiskFactors {
+  totalRecords: number;
+  highRiskDateCount: number;
+  averageAnxiety: number | null;
+  averageFomo: number | null;
+  averageImpulse: number | null;
+  highAnxietyDays: number;
+  highFomoDays: number;
 }
 
 function average(values: number[]): number | null {
@@ -118,6 +129,44 @@ function buildHighScoreDates(
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+function isAtLeast(value: number | null, threshold: number): boolean {
+  return value !== null && value >= threshold;
+}
+
+export function calculateEmotionRiskLevel({
+  totalRecords,
+  highRiskDateCount,
+  averageAnxiety,
+  averageFomo,
+  averageImpulse,
+  highAnxietyDays,
+  highFomoDays,
+}: EmotionRiskFactors): EmotionRiskLevel {
+  const highRiskDateRatio =
+    totalRecords > 0 ? highRiskDateCount / totalRecords : 0;
+
+  if (
+    isAtLeast(averageAnxiety, 7) ||
+    isAtLeast(averageFomo, 7) ||
+    isAtLeast(averageImpulse, 7) ||
+    highRiskDateRatio >= 0.4
+  ) {
+    return "high";
+  }
+
+  if (
+    isAtLeast(averageAnxiety, 4) ||
+    isAtLeast(averageFomo, 4) ||
+    isAtLeast(averageImpulse, 4) ||
+    highAnxietyDays > 0 ||
+    highFomoDays > 0
+  ) {
+    return "medium";
+  }
+
+  return "low";
+}
+
 export function calculateEmotionInsights(
   records: EmotionRecordRow[],
 ): EmotionInsightData {
@@ -132,23 +181,39 @@ export function calculateEmotionInsights(
   );
   const dailyData = buildDailyData(records);
   const composition = buildComposition(records);
+  const highScoreDates = buildHighScoreDates(dailyData);
+  const averageAnxiety = average(anxietyValues);
+  const averageFomo = average(fomoValues);
+  const averageImpulse = average(impulseValues);
+  const highAnxietyDays = dailyData.filter(
+    (day) => (maximum(day.anxietyValues) ?? 0) >= 7,
+  ).length;
+  const highFomoDays = dailyData.filter(
+    (day) => (maximum(day.fomoValues) ?? 0) >= 7,
+  ).length;
+  const riskLevel = calculateEmotionRiskLevel({
+    totalRecords: records.length,
+    highRiskDateCount: highScoreDates.length,
+    averageAnxiety,
+    averageFomo,
+    averageImpulse,
+    highAnxietyDays,
+    highFomoDays,
+  });
 
   return {
     summary: {
       totalRecords: records.length,
       mostFrequentEmotion: composition[0]?.name ?? null,
-      averageAnxiety: average(anxietyValues),
-      averageFomo: average(fomoValues),
-      averageImpulse: average(impulseValues),
-      highAnxietyDays: dailyData.filter(
-        (day) => (maximum(day.anxietyValues) ?? 0) >= 7,
-      ).length,
-      highFomoDays: dailyData.filter(
-        (day) => (maximum(day.fomoValues) ?? 0) >= 7,
-      ).length,
+      averageAnxiety,
+      averageFomo,
+      averageImpulse,
+      highAnxietyDays,
+      highFomoDays,
+      riskLevel,
     },
     trend: buildTrend(dailyData),
     composition,
-    highScoreDates: buildHighScoreDates(dailyData),
+    highScoreDates,
   };
 }

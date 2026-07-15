@@ -49,7 +49,7 @@ export default function Home() {
       />
 
       <section className="grid gap-4 md:grid-cols-3" aria-label="主要功能">
-        {productEntries.map((entry) => (
+        {productEntries.map((entry, index) => (
           <Card key={entry.href} className="flex min-h-56 flex-col">
             <CardHeader className="space-y-4">
               <Badge className="w-fit">{entry.badge}</Badge>
@@ -62,7 +62,7 @@ export default function Home() {
               <Link
                 href={entry.href}
                 className={buttonVariants({
-                  variant: "outline",
+                  variant: index === 0 ? "default" : "secondary",
                   className: "w-full",
                 })}
               >
