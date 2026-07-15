@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -41,9 +42,9 @@ export default function EmotionHistoryCard({
             {formatRecordDate(record.record_date)}
           </CardTitle>
         </div>
-        <span className="rounded-full bg-muted px-3 py-1 text-sm font-medium">
+        <Badge className="text-sm">
           {displayValue(record.strongest_emotion)}
-        </span>
+        </Badge>
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="grid grid-cols-3 gap-3">

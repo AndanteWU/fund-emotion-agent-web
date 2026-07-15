@@ -5,11 +5,13 @@ import type { EmotionHistoryDateRange } from "../types";
 interface EmotionHistoryFiltersProps {
   range: EmotionHistoryDateRange;
   selectedEmotion?: string;
+  calendarMonth?: string;
 }
 
 export default function EmotionHistoryFilters({
   range,
   selectedEmotion = "",
+  calendarMonth,
 }: EmotionHistoryFiltersProps) {
   return (
     <form
@@ -17,6 +19,7 @@ export default function EmotionHistoryFilters({
       method="get"
       className="grid gap-4 rounded-xl border bg-card p-4 sm:grid-cols-3 sm:items-end"
     >
+      {calendarMonth && <input type="hidden" name="month" value={calendarMonth} />}
       <div className="space-y-2">
         <label htmlFor="history-emotion" className="text-sm font-medium">
           主要情绪

@@ -1,4 +1,7 @@
 import Link from "next/link";
+import EmptyState from "@/components/layout/EmptyState";
+import PageContainer from "@/components/layout/PageContainer";
+import PageHeader from "@/components/layout/PageHeader";
 import { buttonVariants } from "@/components/ui/button";
 import LoginPrompt from "@/features/auth/components/LoginPrompt";
 import { queryEmotionHistory } from "@/features/emotion/services/emotion-history-service";
@@ -14,21 +17,13 @@ export default async function InsightDashboard() {
   const result = await queryEmotionHistory();
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
-      <header className="mb-8 space-y-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">
-              基础统计
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-              最近 30 天的情绪概览
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-              统计只基于你的记录，用于观察情绪与行为模式，不构成投资建议。
-            </p>
-          </div>
-          <div className="flex gap-2">
+    <PageContainer>
+      <PageHeader
+        eyebrow="基础统计与 AI 复盘"
+        title="最近 30 天的情绪概览"
+        description="统计只基于你的记录，用于观察情绪与行为模式，不构成投资建议。"
+        actions={
+          <>
             <Link
               href="/history"
               className={buttonVariants({ variant: "outline" })}
@@ -38,9 +33,9 @@ export default async function InsightDashboard() {
             <Link href="/record" className={buttonVariants()}>
               新建记录
             </Link>
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       {result.status === "unauthenticated" && <LoginPrompt />}
 
@@ -55,22 +50,19 @@ export default async function InsightDashboard() {
 
       {result.status === "success" &&
         (result.records.length === 0 ? (
-          <div className="rounded-xl border border-dashed px-6 py-16 text-center">
-            <h2 className="font-medium">最近 30 天还没有情绪记录</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              完成第一条记录后，这里会展示趋势和组成统计。
-            </p>
-            <Link
-              href="/record"
-              className={buttonVariants({ className: "mt-5" })}
-            >
-              开始记录
-            </Link>
-          </div>
+          <EmptyState
+            title="最近 30 天还没有情绪记录"
+            description="完成第一条记录后，这里会展示趋势、组成统计和 AI 情绪复盘。"
+            action={
+              <Link href="/record" className={buttonVariants()}>
+                开始记录
+              </Link>
+            }
+          />
         ) : (
           <InsightContent records={result.records} />
         ))}
-    </main>
+    </PageContainer>
   );
 }
 
