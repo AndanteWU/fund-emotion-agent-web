@@ -19,19 +19,22 @@ export default function LatestObservationCard({
 }: LatestObservationCardProps) {
   return (
     <section aria-labelledby="latest-observation-title">
-      <Card className="min-h-64 border-primary/15 bg-[linear-gradient(145deg,var(--card),color-mix(in_srgb,var(--muted)_55%,var(--card)))] shadow-[0_2px_4px_rgb(42_38_30_/_4%),0_18px_48px_rgb(42_38_30_/_8%)]">
-        <CardHeader className="gap-2 sm:px-7">
+      <Card className="border-foreground/10 bg-[linear-gradient(145deg,var(--card),color-mix(in_srgb,var(--muted)_55%,var(--card)))] shadow-[0_2px_4px_rgb(42_38_30_/_4%),0_18px_48px_rgb(42_38_30_/_8%)]">
+        <CardHeader className="gap-2 px-6 sm:px-8">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
             主动观察
           </p>
-          <CardTitle id="latest-observation-title" className="text-2xl">
+          <CardTitle
+            id="latest-observation-title"
+            className="text-3xl tracking-[-0.035em]"
+          >
             最新观察
           </CardTitle>
           <CardDescription>
             仅依据你最近的情绪记录进行确定性分析。
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-1 flex-col justify-between gap-6 sm:px-7">
+        <CardContent className="flex flex-1 flex-col justify-between gap-5 px-6 sm:px-8">
           {result.status === "detected" && (
             <BehavioralObservationDetails pattern={result.pattern} />
           )}

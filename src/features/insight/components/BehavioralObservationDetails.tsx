@@ -35,14 +35,14 @@ export default function BehavioralObservationDetails({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <h3 className="text-lg font-medium tracking-[-0.02em]">
+        <h3 className="text-xl font-medium tracking-[-0.025em]">
           {pattern.title}
         </h3>
         <Badge className={`border-transparent ${severity.className}`}>
           程度：{severity.label}
         </Badge>
       </div>
-      <p className="text-sm leading-7 text-muted-foreground">
+      <p className="text-sm leading-7 text-foreground/80">
         {pattern.evidence}
       </p>
       <p className="text-xs leading-5 text-muted-foreground">
