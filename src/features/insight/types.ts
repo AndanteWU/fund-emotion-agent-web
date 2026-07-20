@@ -38,3 +38,32 @@ export interface EmotionInsightData {
   composition: EmotionCompositionPoint[];
   highScoreDates: HighScoreDate[];
 }
+
+export type BehavioralPatternType =
+  | "rising_anxiety"
+  | "frequent_checking"
+  | "emotion_action_link";
+
+export type BehavioralPatternSeverity = "low" | "medium" | "high";
+
+export interface BehavioralPattern {
+  type: BehavioralPatternType;
+  title: string;
+  evidence: string;
+  severity: BehavioralPatternSeverity;
+  confidence: number;
+}
+
+export type BehavioralObservationEvaluation =
+  | { status: "insufficient"; recordCount: number }
+  | { status: "none"; recordCount: number }
+  | {
+      status: "detected";
+      recordCount: number;
+      pattern: BehavioralPattern;
+    };
+
+export type BehavioralObservationQueryResult =
+  | BehavioralObservationEvaluation
+  | { status: "unauthenticated" }
+  | { status: "error" };

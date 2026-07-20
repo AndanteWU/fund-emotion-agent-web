@@ -10,6 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import PostSaveObservation, {
+  type PostSaveObservationState,
+} from "@/features/insight/components/PostSaveObservation";
+import { fetchLatestBehavioralObservation } from "@/features/insight/services/browser-proactive-pattern-service";
 import { INITIAL_EMOTION_RECORD } from "../constants";
 import {
   EmotionRecordServiceError,
@@ -126,6 +130,8 @@ export default function EmotionRecordForm() {
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [authStatus, setAuthStatus] = useState<AuthStatus>("checking");
   const [errors, setErrors] = useState<string[]>([]);
+  const [postSaveObservation, setPostSaveObservation] =
+    useState<PostSaveObservationState>({ status: "idle" });
 
   useEffect(() => {
     let active = true;
@@ -175,12 +181,18 @@ export default function EmotionRecordForm() {
 
     setErrors([]);
     setStatus("submitting");
+    setPostSaveObservation({ status: "idle" });
 
     try {
       const { saveEmotionRecord } = await import("../services/emotion-record-service");
       const saveResult = await saveEmotionRecord(result.submission);
       setValues({ ...INITIAL_EMOTION_RECORD });
       setStatus(saveResult);
+      setPostSaveObservation({ status: "loading" });
+
+      void fetchLatestBehavioralObservation()
+        .then(setPostSaveObservation)
+        .catch(() => setPostSaveObservation({ status: "error" }));
     } catch (error: unknown) {
       if (error instanceof EmotionRecordServiceError) {
         setErrors([error.message]);
@@ -388,6 +400,10 @@ export default function EmotionRecordForm() {
         >
           {status === "updated" ? "今日记录已更新" : "记录保存成功"}
         </div>
+      )}
+
+      {(status === "created" || status === "updated") && (
+        <PostSaveObservation state={postSaveObservation} />
       )}
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">

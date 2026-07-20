@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import LatestObservationCard from "@/features/insight/components/LatestObservationCard";
+import { getLatestBehavioralObservation } from "@/features/insight/services/proactive-pattern-service";
 
 const productEntries = [
   {
@@ -34,7 +36,9 @@ const productEntries = [
   },
 ] as const;
 
-export default function Home() {
+export default async function Home() {
+  const latestObservation = await getLatestBehavioralObservation();
+
   return (
     <PageContainer>
       <PageHeader
@@ -47,6 +51,8 @@ export default function Home() {
           </Link>
         }
       />
+
+      <LatestObservationCard result={latestObservation} />
 
       <section className="grid gap-4 md:grid-cols-3" aria-label="主要功能">
         {productEntries.map((entry, index) => (
