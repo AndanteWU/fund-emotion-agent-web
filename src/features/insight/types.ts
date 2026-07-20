@@ -53,3 +53,17 @@ export interface BehavioralPattern {
   severity: BehavioralPatternSeverity;
   confidence: number;
 }
+
+export type BehavioralObservationEvaluation =
+  | { status: "insufficient"; recordCount: number }
+  | { status: "none"; recordCount: number }
+  | {
+      status: "detected";
+      recordCount: number;
+      pattern: BehavioralPattern;
+    };
+
+export type BehavioralObservationQueryResult =
+  | BehavioralObservationEvaluation
+  | { status: "unauthenticated" }
+  | { status: "error" };
