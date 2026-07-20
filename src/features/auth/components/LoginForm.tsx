@@ -159,7 +159,7 @@ export default function LoginForm({
                 autoComplete="email"
                 required
                 value={email}
-                placeholder="you@example.com"
+                placeholder="请输入邮箱地址"
                 disabled={isBusy}
                 onChange={(event) => {
                   setEmail(event.target.value);
@@ -187,7 +187,7 @@ export default function LoginForm({
                 required
                 autoFocus
                 value={otp}
-                placeholder="000000"
+                placeholder="请输入 6 位验证码"
                 disabled={isBusy}
                 onChange={(event) => {
                   setOtp(event.target.value.replace(/\D/g, "").slice(0, 6));
@@ -196,7 +196,7 @@ export default function LoginForm({
                     setMessage("");
                   }
                 }}
-                className="h-12 w-full rounded-lg border border-input bg-transparent px-3 text-center text-xl font-semibold tracking-[0.35em] outline-none transition placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="h-12 w-full rounded-lg border border-input bg-transparent px-3 text-center text-xl font-semibold tracking-[0.3em] outline-none transition placeholder:text-sm placeholder:font-normal placeholder:tracking-normal placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
           )}

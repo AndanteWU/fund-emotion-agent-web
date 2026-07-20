@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
   eyebrow: string;
   title: string;
   description: string;
   actions?: ReactNode;
+  className?: string;
 }
 
 export default function PageHeader({
@@ -12,9 +14,15 @@ export default function PageHeader({
   title,
   description,
   actions,
+  className,
 }: PageHeaderProps) {
   return (
-    <header className="mb-12 flex flex-col gap-7 sm:mb-16 lg:flex-row lg:items-end lg:justify-between">
+    <header
+      className={cn(
+        "mb-12 flex flex-col gap-7 sm:mb-16 lg:flex-row lg:items-end lg:justify-between",
+        className,
+      )}
+    >
       <div className="space-y-4">
         <p className="text-sm font-medium tracking-wide text-muted-foreground">
           {eyebrow}

@@ -55,10 +55,10 @@ function BooleanChoice({
             type="button"
             aria-pressed={value === option.value}
             onClick={() => onChange(option.value)}
-            className={`min-h-10 rounded-lg border px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
+            className={`min-h-10 rounded-[13px] border px-4 py-2 text-sm font-medium transition-[background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#1f1f1d]/20 ${
               value === option.value
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-background hover:bg-accent"
+                ? "border-[#1f1f1d] bg-[#1f1f1d] text-white shadow-[0_1px_2px_rgb(17_17_15_/_10%)] hover:border-[#343430] hover:bg-[#343430] active:bg-[#11110f]"
+                : "border-border/80 bg-card/70 text-foreground shadow-[0_1px_2px_rgb(42_38_30_/_3%)] hover:border-foreground/15 hover:bg-muted/60"
             }`}
           >
             {option.label}

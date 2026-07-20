@@ -40,13 +40,17 @@ export default async function Home() {
   const latestObservation = await getLatestBehavioralObservation();
 
   return (
-    <PageContainer>
+    <PageContainer className="py-10 sm:py-12 lg:py-14">
       <PageHeader
         eyebrow="投资情绪管理"
         title="看见情绪，再做决定"
         description="记录投资过程中的真实感受，回看行为轨迹，建立更稳定的自我观察。这里不预测市场，也不提供买卖建议。"
+        className="mb-6 gap-5 sm:mb-8 lg:items-center"
         actions={
-          <Link href="/record" className={buttonVariants({ size: "lg" })}>
+          <Link
+            href="/record"
+            className={buttonVariants({ size: "lg", className: "min-w-32" })}
+          >
             记录此刻
           </Link>
         }
@@ -54,14 +58,21 @@ export default async function Home() {
 
       <LatestObservationCard result={latestObservation} />
 
-      <section className="grid gap-4 md:grid-cols-3" aria-label="主要功能">
+      <section
+        className="mt-5 grid items-stretch gap-4 md:grid-cols-3"
+        aria-label="主要功能"
+      >
         {productEntries.map((entry, index) => (
-          <Card key={entry.href} className="flex min-h-56 flex-col">
-            <CardHeader className="space-y-4">
+          <Card
+            key={entry.href}
+            size="sm"
+            className="flex h-full min-h-52 flex-col border-border/55 shadow-none"
+          >
+            <CardHeader className="space-y-3">
               <Badge className="w-fit">{entry.badge}</Badge>
               <CardTitle className="text-xl">{entry.title}</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-1 flex-col justify-between gap-6">
+            <CardContent className="flex flex-1 flex-col justify-between gap-5">
               <p className="text-sm leading-6 text-muted-foreground">
                 {entry.description}
               </p>
@@ -79,7 +90,7 @@ export default async function Home() {
         ))}
       </section>
 
-      <section className="mt-6 rounded-2xl border bg-card px-5 py-5 sm:px-6">
+      <section className="mt-5 rounded-2xl border bg-card px-5 py-5 sm:px-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="font-medium">保持克制的观察</h2>
