@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import DueActionFeedbackPrompt from "@/features/action-feedback/components/DueActionFeedbackPrompt";
 import LatestObservationCard from "@/features/insight/components/LatestObservationCard";
 import { getLatestBehavioralObservation } from "@/features/insight/services/proactive-pattern-service";
 
@@ -55,6 +56,10 @@ export default async function Home() {
           </Link>
         }
       />
+
+      <section className="mb-5" aria-label="待反馈行动">
+        <DueActionFeedbackPrompt />
+      </section>
 
       <LatestObservationCard result={latestObservation} />
 

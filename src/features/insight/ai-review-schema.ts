@@ -86,7 +86,29 @@ export const actionableEmotionReviewSchema = z.object({
   disclaimer: z.literal(FIXED_REVIEW_DISCLAIMER),
 });
 
+const reviewSourceDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+
+export const generatedActionableEmotionReviewSchema =
+  actionableEmotionReviewSchema
+    .extend({
+      reviewId: z.uuid(),
+      sourceStartDate: reviewSourceDateSchema,
+      sourceEndDate: reviewSourceDateSchema,
+    })
+    .superRefine((review, context) => {
+      if (review.sourceEndDate < review.sourceStartDate) {
+        context.addIssue({
+          code: "custom",
+          path: ["sourceEndDate"],
+          message: "End date cannot be earlier than start date.",
+        });
+      }
+    });
+
 export type AiEmotionReview = z.infer<typeof aiEmotionReviewSchema>;
 export type ActionableEmotionReview = z.infer<
   typeof actionableEmotionReviewSchema
+>;
+export type GeneratedActionableEmotionReview = z.infer<
+  typeof generatedActionableEmotionReviewSchema
 >;

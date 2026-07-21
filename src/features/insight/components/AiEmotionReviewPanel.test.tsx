@@ -1,9 +1,12 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import type { ActionableEmotionReview } from "../ai-review-schema";
+import type { GeneratedActionableEmotionReview } from "../ai-review-schema";
 import AiEmotionReviewResult from "./AiEmotionReviewResult";
 
-const review: ActionableEmotionReview = {
+const review: GeneratedActionableEmotionReview = {
+  reviewId: "10d7c53f-7488-4198-b0c2-60e6d9c30a86",
+  sourceStartDate: "2026-06-22",
+  sourceEndDate: "2026-07-21",
   observation: {
     type: "rising_anxiety",
     title: "焦虑程度持续上升",
