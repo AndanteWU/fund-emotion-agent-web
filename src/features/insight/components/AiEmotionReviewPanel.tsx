@@ -10,9 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  aiEmotionReviewSchema,
-  type AiEmotionReview,
+  actionableEmotionReviewSchema,
+  type ActionableEmotionReview,
 } from "../ai-review-schema";
+import AiEmotionReviewResult from "./AiEmotionReviewResult";
 
 type ReviewState = "idle" | "loading" | "success" | "empty" | "error";
 
@@ -29,42 +30,9 @@ function getResponseMessage(payload: unknown): string | null {
   return null;
 }
 
-interface ReviewListProps {
-  title: string;
-  items: string[];
-  emptyMessage?: string;
-}
-
-function ReviewList({
-  title,
-  items,
-  emptyMessage = "暂无",
-}: ReviewListProps) {
-  return (
-    <section>
-      <h3 className="font-medium">{title}</h3>
-      {items.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">{emptyMessage}</p>
-      ) : (
-        <ul className="mt-3 space-y-2">
-          {items.map((item) => (
-            <li key={item} className="flex gap-3 text-sm leading-6">
-              <span
-                className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground/50"
-                aria-hidden="true"
-              />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
-}
-
 export default function AiEmotionReviewPanel() {
   const [state, setState] = useState<ReviewState>("idle");
-  const [review, setReview] = useState<AiEmotionReview | null>(null);
+  const [review, setReview] = useState<ActionableEmotionReview | null>(null);
   const [message, setMessage] = useState("");
 
   async function generateReview() {
@@ -89,7 +57,7 @@ export default function AiEmotionReviewPanel() {
         payload.status === "success" &&
         "review" in payload
       ) {
-        const parsed = aiEmotionReviewSchema.safeParse(payload.review);
+        const parsed = actionableEmotionReviewSchema.safeParse(payload.review);
         if (parsed.success) {
           setReview(parsed.data);
           setState("success");
@@ -127,17 +95,16 @@ export default function AiEmotionReviewPanel() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>AI 投资情绪复盘</CardTitle>
+        <CardTitle>投资情绪观察</CardTitle>
         <CardDescription className="leading-6">
-          根据最近 30 天记录生成行为观察，不预测市场，也不构成投资建议。
+          从最近 30 天的记录中，找出此刻最值得留意的一项变化。
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {state === "idle" && (
           <div className="rounded-xl bg-muted/60 px-4 py-5">
             <p className="text-sm leading-6 text-muted-foreground">
-              生成后将展示主要情绪、反复模式、风险信号、观察点和反思问题。
-              结果只在当前页面展示，不会保存到数据库。
+              生成后只展示一项重点变化、一个今天可以完成的行动和一个值得思考的问题。详细判断依据会默认收起，结果不会保存到数据库。
             </p>
           </div>
         )}
@@ -146,7 +113,7 @@ export default function AiEmotionReviewPanel() {
           <div className="rounded-xl bg-muted/60 px-4 py-8 text-center">
             <p className="font-medium">正在整理最近 30 天的记录…</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              生成结构化复盘可能需要一点时间。
+              正在把确定性证据整理成一次简短观察。
             </p>
           </div>
         )}
@@ -165,33 +132,7 @@ export default function AiEmotionReviewPanel() {
         )}
 
         {state === "success" && review && (
-          <div className="space-y-7">
-            <section className="rounded-xl bg-muted/60 px-4 py-5">
-              <p className="text-xs text-muted-foreground">主要情绪</p>
-              <p className="mt-1 text-lg font-semibold">
-                {review.dominantEmotion}
-              </p>
-              <p className="mt-4 text-sm leading-7">{review.summary}</p>
-            </section>
-
-            <div className="grid gap-7 sm:grid-cols-2">
-              <ReviewList title="行为模式" items={review.patterns} />
-              <ReviewList
-                title="风险信号"
-                items={review.riskSignals}
-                emptyMessage="记录中暂未发现明确风险信号"
-              />
-              <ReviewList title="观察点" items={review.observations} />
-              <section>
-                <h3 className="font-medium">反思问题</h3>
-                <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6">
-                  {review.reflectionQuestions.map((question) => (
-                    <li key={question}>{question}</li>
-                  ))}
-                </ol>
-              </section>
-            </div>
-          </div>
+          <AiEmotionReviewResult review={review} />
         )}
 
         <Button
@@ -203,7 +144,7 @@ export default function AiEmotionReviewPanel() {
           {isLoading
             ? "正在生成…"
             : state === "idle"
-              ? "生成 AI 复盘"
+              ? "生成情绪观察"
               : "重新生成"}
         </Button>
       </CardContent>

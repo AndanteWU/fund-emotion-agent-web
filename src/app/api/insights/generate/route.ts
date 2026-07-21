@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { AiConfigurationError } from "@/lib/ai";
 import { queryEmotionHistory } from "@/features/emotion/services/emotion-history-service";
 import { generateAiEmotionReview } from "@/features/insight/services/ai-emotion-review-service";
+import {
+  composeActionableEmotionReview,
+  createAiReviewPromptContext,
+  createDeterministicReviewContext,
+} from "@/features/insight/services/actionable-emotion-review";
 
 function getErrorStatus(error: unknown): number | null {
   if (
@@ -49,7 +54,19 @@ export async function POST() {
   }
 
   try {
-    const review = await generateAiEmotionReview(history.records);
+    const deterministicContext = createDeterministicReviewContext(
+      history.records,
+    );
+    const promptContext = createAiReviewPromptContext(
+      deterministicContext,
+      history.records,
+    );
+    const aiOutput = await generateAiEmotionReview(promptContext);
+    const review = composeActionableEmotionReview(
+      deterministicContext,
+      aiOutput,
+    );
+
     return NextResponse.json({ status: "success", review });
   } catch (error: unknown) {
     if (error instanceof AiConfigurationError) {
