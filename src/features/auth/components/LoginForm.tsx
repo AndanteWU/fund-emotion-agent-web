@@ -148,7 +148,7 @@ export default function LoginForm({
         <form className="space-y-5" onSubmit={handleSubmit} noValidate>
           {stage === "email" ? (
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
+              <label htmlFor="email" className="sr-only">
                 邮箱
               </label>
               <input
@@ -173,7 +173,7 @@ export default function LoginForm({
             </div>
           ) : (
             <div className="space-y-2">
-              <label htmlFor="otp" className="text-sm font-medium">
+              <label htmlFor="otp" className="sr-only">
                 6 位验证码
               </label>
               <input
