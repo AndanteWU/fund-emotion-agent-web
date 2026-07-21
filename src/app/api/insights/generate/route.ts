@@ -62,10 +62,16 @@ export async function POST() {
       history.records,
     );
     const aiOutput = await generateAiEmotionReview(promptContext);
-    const review = composeActionableEmotionReview(
+    const actionableReview = composeActionableEmotionReview(
       deterministicContext,
       aiOutput,
     );
+    const review = {
+      ...actionableReview,
+      reviewId: crypto.randomUUID(),
+      sourceStartDate: history.range.startDate,
+      sourceEndDate: history.range.endDate,
+    };
 
     return NextResponse.json({ status: "success", review });
   } catch (error: unknown) {

@@ -10,8 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  actionableEmotionReviewSchema,
-  type ActionableEmotionReview,
+  generatedActionableEmotionReviewSchema,
+  type GeneratedActionableEmotionReview,
 } from "../ai-review-schema";
 import AiEmotionReviewResult from "./AiEmotionReviewResult";
 
@@ -32,7 +32,8 @@ function getResponseMessage(payload: unknown): string | null {
 
 export default function AiEmotionReviewPanel() {
   const [state, setState] = useState<ReviewState>("idle");
-  const [review, setReview] = useState<ActionableEmotionReview | null>(null);
+  const [review, setReview] =
+    useState<GeneratedActionableEmotionReview | null>(null);
   const [message, setMessage] = useState("");
 
   async function generateReview() {
@@ -57,7 +58,9 @@ export default function AiEmotionReviewPanel() {
         payload.status === "success" &&
         "review" in payload
       ) {
-        const parsed = actionableEmotionReviewSchema.safeParse(payload.review);
+        const parsed = generatedActionableEmotionReviewSchema.safeParse(
+          payload.review,
+        );
         if (parsed.success) {
           setReview(parsed.data);
           setState("success");
@@ -104,7 +107,7 @@ export default function AiEmotionReviewPanel() {
         {state === "idle" && (
           <div className="rounded-xl bg-muted/60 px-4 py-5">
             <p className="text-sm leading-6 text-muted-foreground">
-              生成后只展示一项重点变化、一个今天可以完成的行动和一个值得思考的问题。详细判断依据会默认收起，结果不会保存到数据库。
+              复盘内容不会保存，确认后的行动选择会被记录。
             </p>
           </div>
         )}
@@ -132,7 +135,7 @@ export default function AiEmotionReviewPanel() {
         )}
 
         {state === "success" && review && (
-          <AiEmotionReviewResult review={review} />
+          <AiEmotionReviewResult key={review.reviewId} review={review} />
         )}
 
         <Button

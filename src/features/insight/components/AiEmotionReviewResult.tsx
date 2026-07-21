@@ -1,8 +1,9 @@
-import type { ActionableEmotionReview } from "../ai-review-schema";
+import ActionDecisionControls from "@/features/action-feedback/components/ActionDecisionControls";
+import type { GeneratedActionableEmotionReview } from "../ai-review-schema";
 import { EMOTION_COLOR_STYLES } from "../../emotion/constants";
 
 interface AiEmotionReviewResultProps {
-  review: ActionableEmotionReview;
+  review: GeneratedActionableEmotionReview;
 }
 
 const SEVERITY_PRESENTATION = {
@@ -85,6 +86,18 @@ export default function AiEmotionReviewResult({
         <p className="mt-2 max-w-3xl text-sm leading-7 text-foreground/80">
           {review.singleAction.instruction}
         </p>
+        <ActionDecisionControls
+          decisionContext={{
+            reviewId: review.reviewId,
+            patternType: review.observation.type,
+            observationTitle: review.observation.title,
+            observationEvidence: review.observation.evidence,
+            sourceStartDate: review.sourceStartDate,
+            sourceEndDate: review.sourceEndDate,
+            actionTitle: review.singleAction.title,
+            actionInstruction: review.singleAction.instruction,
+          }}
+        />
       </section>
 
       <section className="rounded-[20px] bg-muted/55 px-5 py-5 sm:px-6">
