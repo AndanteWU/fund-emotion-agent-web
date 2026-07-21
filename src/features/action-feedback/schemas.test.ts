@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { actionDecisionRequestSchema } from "./schemas";
+import {
+  actionDecisionRequestSchema,
+  actionFeedbackParamsSchema,
+  actionFeedbackRequestSchema,
+} from "./schemas";
 
 const validDecisionRequest = {
   reviewId: "10d7c53f-7488-4198-b0c2-60e6d9c30a86",
@@ -33,5 +37,31 @@ describe("actionDecisionRequestSchema", () => {
     });
 
     expect(result.success).toBe(false);
+  });
+});
+
+describe("actionFeedbackRequestSchema", () => {
+  it.each(["helpful", "not_helpful", "not_tried"] as const)(
+    "accepts the %s feedback value",
+    (feedback) => {
+      expect(actionFeedbackRequestSchema.safeParse({ feedback }).success).toBe(
+        true,
+      );
+    },
+  );
+
+  it("rejects extra fields such as user_id", () => {
+    expect(
+      actionFeedbackRequestSchema.safeParse({
+        feedback: "helpful",
+        user_id: "e2028fb4-e3d9-49ec-8cbb-6d7f9b593124",
+      }).success,
+    ).toBe(false);
+  });
+});
+
+describe("actionFeedbackParamsSchema", () => {
+  it("rejects a non-UUID action id", () => {
+    expect(actionFeedbackParamsSchema.safeParse({ actionId: "action-1" }).success).toBe(false);
   });
 });

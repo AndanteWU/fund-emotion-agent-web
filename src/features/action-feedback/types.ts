@@ -37,6 +37,32 @@ export interface AgentActionRow {
   updated_at: string;
 }
 
+export type AgentActionFeedbackCandidate = Pick<
+  AgentActionRow,
+  | "id"
+  | "observation_title"
+  | "action_title"
+  | "action_instruction"
+  | "status"
+  | "feedback_due_at"
+  | "last_prompted_at"
+  | "feedback"
+>;
+
+export interface DueActionFeedbackPrompt {
+  id: string;
+  observationTitle: string;
+  actionTitle: string;
+  actionInstruction: string;
+  feedbackDueAt: string;
+}
+
+export interface AgentActionFeedbackUpdatePayload {
+  status: "completed";
+  feedback: AgentActionFeedback;
+  feedback_at: string;
+}
+
 interface AgentActionInsertPayloadBase {
   user_id: string;
   review_id: string;

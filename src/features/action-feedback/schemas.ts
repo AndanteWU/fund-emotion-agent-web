@@ -47,3 +47,19 @@ export const actionDecisionRequestSchema = z
 export type ActionDecisionRequest = z.infer<
   typeof actionDecisionRequestSchema
 >;
+
+export const actionFeedbackRequestSchema = z
+  .object({
+    feedback: z.enum(["helpful", "not_helpful", "not_tried"]),
+  })
+  .strict();
+
+export const actionFeedbackParamsSchema = z
+  .object({
+    actionId: z.uuid(),
+  })
+  .strict();
+
+export type ActionFeedbackRequest = z.infer<
+  typeof actionFeedbackRequestSchema
+>;

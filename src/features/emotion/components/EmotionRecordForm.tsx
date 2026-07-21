@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import DueActionFeedbackPrompt from "@/features/action-feedback/components/DueActionFeedbackPrompt";
 import PostSaveObservation, {
   type PostSaveObservationState,
 } from "@/features/insight/components/PostSaveObservation";
@@ -400,6 +401,10 @@ export default function EmotionRecordForm() {
         >
           {status === "updated" ? "今日记录已更新" : "记录保存成功"}
         </div>
+      )}
+
+      {(status === "created" || status === "updated") && (
+        <DueActionFeedbackPrompt />
       )}
 
       {(status === "created" || status === "updated") && (
